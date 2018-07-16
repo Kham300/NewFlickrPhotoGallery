@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
     }
-
+//TODO заменить на Handler
     @SuppressLint("StaticFieldLeak")
     public class LoadDataFromServer extends AsyncTask<Void, Void, Void>  {
 
