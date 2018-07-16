@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -30,10 +31,13 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        Bitmap bitmap = FlickrFetchr.getBitmapFromURL();
-        //Convert bitmap to drawable
-        Drawable drawable = new BitmapDrawable(bitmap);
-        viewHolder.bindDrawable(drawable);
+
+        MyData data = myData.get(i);
+        viewHolder.textView.setText(data.getCaption());
+//        Bitmap bitmap = FlickrFetchr.getBitmapFromURL();
+//        //Convert bitmap to drawable
+//        Drawable drawable = new BitmapDrawable(bitmap);
+//        viewHolder.bindDrawable(drawable);
     }
 
 
@@ -46,10 +50,13 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView imageView;
+        public TextView textView;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.image);
+            textView = itemView.findViewById(R.id.text);
         }
         public void bindDrawable(Drawable drawable) {
             imageView.setImageDrawable(drawable);

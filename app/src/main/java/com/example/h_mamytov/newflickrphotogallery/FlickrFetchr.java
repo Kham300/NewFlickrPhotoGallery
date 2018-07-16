@@ -34,6 +34,7 @@ public class FlickrFetchr {
     private static final Uri ENDPOINT = Uri
             .parse("https://api.flickr.com/services/rest/")
             .buildUpon()
+            .appendQueryParameter("method", FETCH_RECENTS_METHODS)
             .appendQueryParameter("api_key", API_KEY)
             .appendQueryParameter("format", "json")
             .appendQueryParameter("nojsoncallback", "1")
@@ -64,7 +65,6 @@ public class FlickrFetchr {
     }
 
     public static String getUrlString() throws IOException {
-
         return new String(getUrlBytes(ENDPOINT.toString()));
     }
 
@@ -73,6 +73,7 @@ public class FlickrFetchr {
 
     }
 
+    //to download an image
     public static Bitmap getBitmapFromURL() {
         try {
             URL url = new URL(getUrlDownloadSourceUrl());
@@ -81,8 +82,7 @@ public class FlickrFetchr {
             connection.setDoInput(true);
             connection.connect();
             InputStream input = connection.getInputStream();
-            Bitmap myBitmap = BitmapFactory.decodeStream(input);
-            return myBitmap;
+            return BitmapFactory.decodeStream(input);
         } catch (IOException e) {
             e.printStackTrace();
             return null;

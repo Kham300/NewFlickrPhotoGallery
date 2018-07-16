@@ -1,7 +1,10 @@
 package com.example.h_mamytov.newflickrphotogallery;
 
 import android.annotation.SuppressLint;
+import android.app.PendingIntent;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -18,7 +21,9 @@ public class MainActivity extends AppCompatActivity {
     private GridLayoutManager gridLayoutManager;
     private CustomAdapter adapter;
     private List<MyData> dataList;
+    private Handler handler;
 
+    @SuppressLint("HandlerLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,8 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recycler_view);
         dataList = new ArrayList<>();
-        LoadDataFromServer loadDataFromServer = new LoadDataFromServer();
-        loadDataFromServer.execute();
+
+        initData();
 
         gridLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(gridLayoutManager);
@@ -35,14 +40,35 @@ public class MainActivity extends AppCompatActivity {
         adapter = new CustomAdapter(dataList);
         recyclerView.setAdapter(adapter);
 
+        handler = new Handler(){
+            public void handleMessage(Message msg){
+                if (msg.what !=0) {
+                    adapter.notifyDataSetChanged();
+                    System.out.println("received images: = " + msg.what);
+                }
+            }
+        };
+
     }
+
+    public void initData(){
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                FlickrFetchr.downloadGalleryItems(dataList);
+                handler.sendEmptyMessage(dataList.size());
+            }
+        });
+        thread.start();
+    }
+
 //TODO заменить на Handler
     @SuppressLint("StaticFieldLeak")
     public class LoadDataFromServer extends AsyncTask<Void, Void, Void>  {
 
             @Override
             protected Void doInBackground(Void... voids) {
-                FlickrFetchr.downloadGalleryItems(dataList);
+
                 return null;
             }
 
