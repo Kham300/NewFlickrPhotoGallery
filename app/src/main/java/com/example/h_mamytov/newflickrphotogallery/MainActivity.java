@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
         initData();
 
-        gridLayoutManager = new GridLayoutManager(this, 2);
+        gridLayoutManager = new GridLayoutManager(this, 3);
         recyclerView.setLayoutManager(gridLayoutManager);
 
         adapter = new CustomAdapter();
