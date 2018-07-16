@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 /**
  * Created by EdgeTech on 15.04.2018.
@@ -27,6 +28,7 @@ import java.util.List;
 
 public class FlickrFetchr {
 
+    //
     private static final String TAG = "FlickrFetchr";
     private static final String API_KEY = "23275965a3f41093fe4cf9129b32d1d0";
     private static final String FETCH_RECENTS_METHODS = "flickr.photos.getRecent";
@@ -41,7 +43,7 @@ public class FlickrFetchr {
             .appendQueryParameter("extras", "url_s")
             .build();
 
-    private static byte[] getUrlBytes(String urlSpec) throws IOException{
+    public static byte[] getUrlBytes(String urlSpec) throws IOException{
         URL url = new URL(urlSpec);
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
 
@@ -73,24 +75,9 @@ public class FlickrFetchr {
 
     }
 
-    //to download an image
-    public static Bitmap getBitmapFromURL() {
-        try {
-            URL url = new URL(getUrlDownloadSourceUrl());
-            HttpURLConnection connection = (HttpURLConnection) url
-                    .openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            return BitmapFactory.decodeStream(input);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     //method that builds an appropriate request URL and fetches its contents.
-    public static void downloadGalleryItems(List<MyData> items) {
+    public static List<MyData> downloadGalleryItems() {
+        List<MyData> items = new ArrayList<>();
 
         try{
             String jsonString = getUrlString();
@@ -105,6 +92,8 @@ public class FlickrFetchr {
         } catch (JSONException je){
             Log.e(TAG, "Failed to parse JSON", je);
         }
+
+        return items;
 
     }
 
@@ -125,7 +114,9 @@ public class FlickrFetchr {
             if (!photoJsonObject.has("url_s")){
                 continue;
             }
-
+            item.setFarmId(photoJsonObject.getString("farm"));
+            item.setSecret(photoJsonObject.getString("secret"));
+            item.setServerId(photoJsonObject.getString("server"));
             item.setUrl(photoJsonObject.getString("url_s"));
             items.add(item);
         }

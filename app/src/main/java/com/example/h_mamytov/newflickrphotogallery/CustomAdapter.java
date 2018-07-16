@@ -1,8 +1,7 @@
 package com.example.h_mamytov.newflickrphotogallery;
 
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,15 +10,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
 
     private List<MyData> myData;
+    private Handler handler;
 
-    public CustomAdapter( List<MyData> dataList) {
-        this.myData = dataList;
+    public CustomAdapter() {
+        this.myData = new ArrayList<>();
+        handler = new Handler();
     }
 
     @NonNull
@@ -30,14 +32,22 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
+        final MyData data = myData.get(i);
 
-        MyData data = myData.get(i);
-        viewHolder.textView.setText(data.getCaption());
-//        Bitmap bitmap = FlickrFetchr.getBitmapFromURL();
-//        //Convert bitmap to drawable
-//        Drawable drawable = new BitmapDrawable(bitmap);
-//        viewHolder.bindDrawable(drawable);
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final Drawable drawable = DownloadManager.getCurrentItemImage(data.getUrl());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        viewHolder.bindDrawable(drawable);
+                    }
+                });
+            }
+        });
+        thread.start();
     }
 
 
@@ -55,11 +65,15 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.image);
+            imageView = itemView.findViewById(R.id.card_image);
             textView = itemView.findViewById(R.id.text);
         }
         public void bindDrawable(Drawable drawable) {
             imageView.setImageDrawable(drawable);
         }
+    }
+
+    public void setMyData(List<MyData> myData) {
+        this.myData = myData;
     }
 }
