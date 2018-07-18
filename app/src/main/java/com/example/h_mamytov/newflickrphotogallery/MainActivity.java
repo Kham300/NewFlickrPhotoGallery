@@ -13,22 +13,22 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
 
-    private RecyclerView recyclerView;
-    private GridLayoutManager gridLayoutManager;
+    private final ThreadLocal<GridLayoutManager> gridLayoutManager = new ThreadLocal<>();
     private CustomAdapter adapter;
     private Handler handler;
+
     @SuppressLint("HandlerLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         //UI
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        recyclerView = findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
 
         initData();
 
-        gridLayoutManager = new GridLayoutManager(this, 3);
-        recyclerView.setLayoutManager(gridLayoutManager);
+        gridLayoutManager.set(new GridLayoutManager(this, 1));
+        recyclerView.setLayoutManager(gridLayoutManager.get());
 
         adapter = new CustomAdapter();
         recyclerView.setAdapter(adapter);

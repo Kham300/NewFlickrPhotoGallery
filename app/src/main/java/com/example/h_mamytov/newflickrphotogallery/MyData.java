@@ -70,7 +70,4 @@ class MyData {
         return drawable;
     }
 
-    public String createDownloadImageUrl(){
-         return TMP + farmId + STATIC_URL + serverId + "/" + id + "_" + secret + "_" + SIZE_M + FORMAT;
-    }
 }

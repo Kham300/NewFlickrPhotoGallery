@@ -70,10 +70,6 @@ public class FlickrFetchr {
         return new String(getUrlBytes(ENDPOINT.toString()));
     }
 
-    public static String getUrlDownloadSourceUrl(){
-        return "https://farm1.staticflickr.com/2/1418878_1e92283336_m.jpg";
-
-    }
 
     //method that builds an appropriate request URL and fetches its contents.
     public static List<MyData> downloadGalleryItems() {
