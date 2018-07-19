@@ -29,15 +29,23 @@ public class DownloadManager extends Thread {
     public void run() {
         super.run();
         final Bitmap bitmap = DownloadManager.getBitmapFromURL(url);
+//        try {
+//            sleep(2000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         handler.post(new Runnable() {
             @Override
             public void run() {
-                imageView.setImageBitmap(bitmap);
+                if (imageView.getTag().equals(url)) {
+                    imageView.setImageBitmap(bitmap);
+                } else {
+                    System.out.println("didn't match");
+                }
                 Log.i(TAG, "setting image to the position " + position);
             }
         });
     }
-
 
     //to download an image
     private static Bitmap getBitmapFromURL(String s) {
@@ -50,5 +58,7 @@ public class DownloadManager extends Thread {
         return null;
     }
 
-
+    public int getPosition() {
+        return position;
+    }
 }

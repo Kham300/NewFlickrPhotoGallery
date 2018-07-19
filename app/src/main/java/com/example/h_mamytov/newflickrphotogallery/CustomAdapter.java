@@ -8,8 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -32,17 +30,15 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card, viewGroup, false);
-         context = view.getContext();
+        context = view.getContext();
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
         final MyData data = myData.get(i);
+        viewHolder.imageView.setTag(data.getUrl());
         threadPoolExecutor.execute(new DownloadManager(viewHolder.imageView, data.getUrl(), i));
-
-//        DownloadManager downloadManager = new DownloadManager(viewHolder.imageView, data.getUrl());
-//        downloadManager.start();
     }
 
 

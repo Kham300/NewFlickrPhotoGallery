@@ -12,8 +12,6 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-
-    private final ThreadLocal<GridLayoutManager> gridLayoutManager = new ThreadLocal<>();
     private CustomAdapter adapter;
     private Handler handler;
 
@@ -27,8 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
         initData();
 
-        gridLayoutManager.set(new GridLayoutManager(this, 1));
-        recyclerView.setLayoutManager(gridLayoutManager.get());
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
 
         adapter = new CustomAdapter();
         recyclerView.setAdapter(adapter);

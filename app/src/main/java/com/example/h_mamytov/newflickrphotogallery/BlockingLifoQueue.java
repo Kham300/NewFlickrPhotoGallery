@@ -15,7 +15,6 @@ public final class BlockingLifoQueue<T> implements BlockingQueue<T> {
 
     private static final String TAG = "BlockingLifoQueue";
 
-    // we add and remove only from the end of the queue
     private final BlockingDeque<T> deque;
 
     public BlockingLifoQueue() {
