@@ -37,6 +37,8 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
         final MyData data = myData.get(i);
+
+        viewHolder.imageView.setImageBitmap(null);
         viewHolder.imageView.setTag(data.getUrl());
         threadPoolExecutor.execute(new DownloadManager(viewHolder.imageView, data.getUrl(), i));
     }
