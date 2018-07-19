@@ -1,7 +1,5 @@
 package com.example.h_mamytov.newflickrphotogallery;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.util.Log;
 
