@@ -6,8 +6,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.h_mamytov.newflickrphotogallery.data.OpenDBHelper;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -20,6 +24,7 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
     private ThreadPoolExecutor threadPoolExecutor ;
 
     private Context context;
+
 
     public CustomAdapter() {
         this.myData = new ArrayList<>();
@@ -52,14 +57,35 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public ImageView imageView;
-        public TextView textView;
+        ImageView imageView;
+        TextView textView;
+        private ImageButton button;
+        private boolean isFavorite ;
 
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull final View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.card_image);
-            textView = itemView.findViewById(R.id.text);
+            textView = itemView.findViewById(R.id.card_name);
+
+            button = itemView.findViewById(R.id.favorite_item);
+
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!isFavorite){
+                        button.setImageResource(R.drawable.ic_star_black_24dp);
+                        OpenDBHelper instance = OpenDBHelper.getInstance(view.getContext());
+                        instance.insertFavoritePhotos(myData.get(getAdapterPosition()), view.getContext());
+
+                    } else {
+                        button.setImageResource(R.drawable.ic_star_border_black_24dp);
+                        isFavorite = !isFavorite;
+
+                    }
+                }
+            });
+
         }
 
     }

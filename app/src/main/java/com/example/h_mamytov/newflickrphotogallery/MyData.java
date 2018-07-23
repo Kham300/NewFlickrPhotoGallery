@@ -2,7 +2,8 @@ package com.example.h_mamytov.newflickrphotogallery;
 
 import android.graphics.drawable.Drawable;
 
-class MyData {
+public class MyData {
+
     private String caption;
     private int id;
     private String url;
