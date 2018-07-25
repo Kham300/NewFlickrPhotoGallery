@@ -51,8 +51,9 @@ public class FragmentFavorites extends Fragment {
             @Override
             public void run() {
                 List<MyData> myData = OpenDBHelper.getInstance().getAllFavItems();
-                adapter.setFavoriteItems(myData);
-
+                if (myData != null) {
+                    adapter.setFavoriteItems(myData);
+                }
                 handler.post(new Runnable() {
                     @Override
                     public void run() {

@@ -41,17 +41,15 @@ public class OpenDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String SQL_CREATE_GUESTS_TABLE = "CREATE TABLE " + PhotoContract.PhotoEntry.TABLE_NAME + " ("
-                + PhotoContract.PhotoEntry._ID +         " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + PhotoContract.PhotoEntry._ID +         " INTEGER PRIMARY KEY AUTOINCREMENT  , "
                 + PhotoContract.PhotoEntry.COLUMN_NAME + " TEXT NOT NULL, "
-                + PhotoContract.PhotoEntry.COLUMN_URL +  " TEXT NOT NULL);";
+                + PhotoContract.PhotoEntry.COLUMN_URL +  " TEXT UNIQUE NOT NULL);";
 
         sqLiteDatabase.execSQL(SQL_CREATE_GUESTS_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + PhotoContract.PhotoEntry.TABLE_NAME);
-        onCreate(sqLiteDatabase);
     }
 
     public void insertFavoritePhotos(MyData myData){
