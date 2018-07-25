@@ -36,11 +36,14 @@ public class FragmentFavorites extends Fragment {
                 new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
 
-        initData();
+
 
         adapter = new FavoriteListAdapter();
+
         recyclerView.setAdapter(adapter);
         handler = new Handler();
+
+        initData();
 
         return view;
     }

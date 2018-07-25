@@ -33,7 +33,7 @@ public class FragmentHome extends Fragment {
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
 
-        initData();
+
 
         StaggeredGridLayoutManager staggeredGridLayoutManager =
                 new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
@@ -43,6 +43,8 @@ public class FragmentHome extends Fragment {
         recyclerView.setAdapter(adapter);
 
         handler = new Handler();
+
+        initData();
 
         return view;
     }

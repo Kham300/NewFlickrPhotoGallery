@@ -107,7 +107,6 @@ public class OpenDBHelper extends SQLiteOpenHelper {
     }
 
     public int deleteFavoritePhotoById(int id) {
-        // sqLiteDatabase.delete(MYDATABASE_TABLE, KEY_ID+"="+id, null);
         SQLiteDatabase db = OpenDBHelper.getInstance().getReadableDatabase();
         int delete = db.delete(PhotoContract.PhotoEntry.TABLE_NAME, PhotoContract.PhotoEntry._ID + "=" + id, null);
         if (delete == -1){

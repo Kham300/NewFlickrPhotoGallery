@@ -77,10 +77,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                         OpenDBHelper instance = OpenDBHelper.getInstance();
                         instance.insertFavoritePhotos(myData);
                         myData.setFavorite(true);
-
                     } else {
                         button.setImageResource(R.drawable.ic_star_border_black_24dp);
                         OpenDBHelper instance = OpenDBHelper.getInstance();
+                        //TODO не удаляет !!!! сделать уникальным урл и удалять по урлу
                         instance.deleteFavoritePhotoById(myData.getId());
                         myDataList.remove(myData);
                     }
