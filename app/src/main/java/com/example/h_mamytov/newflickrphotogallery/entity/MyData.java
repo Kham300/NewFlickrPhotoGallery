@@ -1,4 +1,4 @@
-package com.example.h_mamytov.newflickrphotogallery;
+package com.example.h_mamytov.newflickrphotogallery.entity;
 
 import android.graphics.drawable.Drawable;
 
@@ -15,6 +15,8 @@ public class MyData {
     private String FORMAT = ".jpg";
     private String TMP = "http://farm";
     private Drawable drawable;
+    boolean isFavorite;
+
 
     public MyData() {
     }
@@ -70,5 +72,14 @@ public class MyData {
     public Drawable getDrawable() {
         return drawable;
     }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
 
 }

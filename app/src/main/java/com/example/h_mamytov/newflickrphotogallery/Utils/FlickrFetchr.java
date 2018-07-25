@@ -1,7 +1,14 @@
-package com.example.h_mamytov.newflickrphotogallery;
+package com.example.h_mamytov.newflickrphotogallery.Utils;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
+
+import com.example.h_mamytov.newflickrphotogallery.data.OpenDBHelper;
+import com.example.h_mamytov.newflickrphotogallery.entity.MyData;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,7 +20,11 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
+
 /**
  * Created by EdgeTech on 15.04.2018.
  * class that handles the networking in PhotoGallery
@@ -44,7 +55,6 @@ public class FlickrFetchr {
     public static byte[] getUrlBytes(String urlSpec) throws IOException{
         URL url = new URL(urlSpec);
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-
         try{
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             InputStream in = connection.getInputStream();
@@ -64,16 +74,18 @@ public class FlickrFetchr {
         }
     }
 
-    public static String getUrlString() throws IOException {
+    private static String getUrlString() throws IOException {
         return new String(getUrlBytes(ENDPOINT.toString()));
     }
 
 
     //method that builds an appropriate request URL and fetches its contents.
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public static List<MyData> downloadGalleryItems() {
         List<MyData> items = new ArrayList<>();
 
         try{
+
             String jsonString = getUrlString();
             Log.i(TAG, "Received JSON: " + jsonString);
 
@@ -87,7 +99,14 @@ public class FlickrFetchr {
             Log.e(TAG, "Failed to parse JSON", je);
         }
 
-        return items;
+        Set<MyData> fooSet = new LinkedHashSet<>( OpenDBHelper.getInstance().getAllFavItems());
+        for (MyData data : fooSet){
+            data.setFavorite(true);
+        }
+
+        fooSet.addAll(items);
+
+        return new ArrayList<>(fooSet);
 
     }
 

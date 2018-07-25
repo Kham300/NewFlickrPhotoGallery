@@ -1,10 +1,11 @@
-package com.example.h_mamytov.newflickrphotogallery;
+package com.example.h_mamytov.newflickrphotogallery.Utils;
 
 import android.app.Application;
 
+import com.example.h_mamytov.newflickrphotogallery.data.OpenDBHelper;
 import com.facebook.stetho.Stetho;
 
-public class StethoApp extends Application {
+public class App extends Application {
 
     @Override
     public void onCreate() {
@@ -28,5 +29,8 @@ public class StethoApp extends Application {
 
         // Initialize Stetho with the Initializer
         Stetho.initialize(initializer);
+
+        OpenDBHelper.init(this);
+
     }
 }

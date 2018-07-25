@@ -1,4 +1,4 @@
-package com.example.h_mamytov.newflickrphotogallery;
+package com.example.h_mamytov.newflickrphotogallery.Utils;
 
 import android.util.Log;
 

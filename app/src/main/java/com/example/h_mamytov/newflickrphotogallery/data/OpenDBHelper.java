@@ -2,25 +2,33 @@ package com.example.h_mamytov.newflickrphotogallery.data;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.view.View;
-import android.widget.Toast;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import com.example.h_mamytov.newflickrphotogallery.entity.MyData;
 
-import com.example.h_mamytov.newflickrphotogallery.MyData;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OpenDBHelper extends SQLiteOpenHelper {
 
     public static final String LOG_TAG = OpenDBHelper.class.getSimpleName();
-
     private static OpenDBHelper sInstance;
 
-    public static synchronized OpenDBHelper getInstance(Context context){
+    public static synchronized OpenDBHelper getInstance(){
         if (sInstance == null){
-            sInstance = new OpenDBHelper(context.getApplicationContext());
+    throw  new RuntimeException("OpenDBHelper не был заиничин");
         }
         return sInstance;
     }
+
+
+    public static void init(Context context){
+        sInstance = new OpenDBHelper(context);
+    }
+
 
     //имя файла базы данных
     private static final String DATABASE_NAME = "photos.db";
@@ -42,15 +50,16 @@ public class OpenDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + PhotoContract.PhotoEntry.TABLE_NAME);
+        onCreate(sqLiteDatabase);
     }
 
-    public void insertFavoritePhotos(MyData myData, Context context){
+    public void insertFavoritePhotos(MyData myData){
         String name = myData.getCaption();
-        //TODO url надо переделывать ? _m, _s?
+        //TODO url надо переделывать _m, _s?
         String url = myData.getUrl();
 
-        OpenDBHelper instance = OpenDBHelper.getInstance(context);
+        OpenDBHelper instance = OpenDBHelper.getInstance();
 
         SQLiteDatabase db = instance.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -60,10 +69,54 @@ public class OpenDBHelper extends SQLiteOpenHelper {
         long newRowId = db.insert(PhotoContract.PhotoEntry.TABLE_NAME, null, values);
 
         if (newRowId == -1){
-            Toast.makeText(context, "Ошибка при заведении фото", Toast.LENGTH_SHORT).show();
+            System.out.println("Error saving");
         } else {
-            Toast.makeText(context, "Фото создано под номером: " + newRowId, Toast.LENGTH_SHORT).show();
+            System.out.println("saving" + newRowId);
         }
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public List<MyData> getAllFavItems() {
+        List<MyData> allFavItems = new ArrayList<>();
+        SQLiteDatabase db = OpenDBHelper.getInstance().getReadableDatabase();
+
+        String[] projection = {
+                PhotoContract.PhotoEntry._ID,
+                PhotoContract.PhotoEntry.COLUMN_NAME,
+                PhotoContract.PhotoEntry.COLUMN_URL};
+
+        //делаем запрос
+        try (Cursor cursor = db.query(
+                PhotoContract.PhotoEntry.TABLE_NAME,
+                projection,
+                null,
+                null,
+                null,
+                null,
+                null)) {
+
+            while (cursor.moveToNext()) {
+                MyData myData = new MyData();
+                myData.setId(cursor.getInt(cursor.getColumnIndex(PhotoContract.PhotoEntry._ID)));
+                myData.setCaption(cursor.getString(cursor.getColumnIndex(PhotoContract.PhotoEntry.COLUMN_NAME)));
+                myData.setUrl(cursor.getString(cursor.getColumnIndex(PhotoContract.PhotoEntry.COLUMN_URL)));
+                allFavItems.add(myData);
+            }
+        }
+
+        return allFavItems;
+    }
+
+    public int deleteFavoritePhotoById(int id) {
+        // sqLiteDatabase.delete(MYDATABASE_TABLE, KEY_ID+"="+id, null);
+        SQLiteDatabase db = OpenDBHelper.getInstance().getReadableDatabase();
+        int delete = db.delete(PhotoContract.PhotoEntry.TABLE_NAME, PhotoContract.PhotoEntry._ID + "=" + id, null);
+        if (delete == -1){
+            System.out.println("Error deleting");
+        } else {
+            System.out.println("deleting");
+        }
+        return delete;
     }
 }

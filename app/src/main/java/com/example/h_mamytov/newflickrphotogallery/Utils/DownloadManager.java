@@ -1,4 +1,4 @@
-package com.example.h_mamytov.newflickrphotogallery;
+package com.example.h_mamytov.newflickrphotogallery.Utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.ImageView;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -24,7 +25,7 @@ public class DownloadManager extends Thread {
     private Bitmap bitmap;
     private File file;
 
-    DownloadManager(ImageView imageView, String url, int position) {
+    public DownloadManager(ImageView imageView, String url, int position) {
         this.imageView = imageView;
         this.url = url;
         handler = new Handler();
@@ -43,7 +44,7 @@ public class DownloadManager extends Thread {
             kokok();
         } else {
             String url_q = url.substring(0, url.length() - 5);
-            url_q = url_q + "m.jpg";
+            url_q = url_q + "z.jpg";
             bitmap = DownloadManager.getBitmapFromURL(url_q);
             kokok();
             if (bitmap != null) {
@@ -80,20 +81,13 @@ public class DownloadManager extends Thread {
 
     private void savePicture(Bitmap bitmap){
         OutputStream out;
-//        String fileName = createFileName(url);
-//        try {
-//            File file = new File(context.getCacheDir(), fileName);
-//
-//            if (!file.exists()) {
         try {
-//                file.createNewFile();
-                out = new FileOutputStream(file);
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 85, out);
-                out.flush();
-                out.close();
+            out = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 85, out);
+            out.flush();
+            out.close();
 
-                Log.i(TAG, "file saved in folder " + context.getCacheDir() + " name " + file.getName());
-
+            Log.i(TAG, "file saved in folder " + context.getCacheDir() + " name " + file.getName());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
