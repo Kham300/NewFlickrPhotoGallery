@@ -13,6 +13,7 @@ public final class PhotoContract {
         public static final String _ID = BaseColumns._ID;
         public static final String COLUMN_NAME = "name";
         public static final String COLUMN_URL = "url";
+        public static final String COLUMN_SECRET = "secret";
     }
 
 }

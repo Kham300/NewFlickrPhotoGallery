@@ -82,4 +82,7 @@ public class MyData {
     }
 
 
+    public String getSecret() {
+        return secret;
+    }
 }

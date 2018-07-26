@@ -41,9 +41,10 @@ public class OpenDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String SQL_CREATE_GUESTS_TABLE = "CREATE TABLE " + PhotoContract.PhotoEntry.TABLE_NAME + " ("
-                + PhotoContract.PhotoEntry._ID +         " INTEGER PRIMARY KEY AUTOINCREMENT  , "
-                + PhotoContract.PhotoEntry.COLUMN_NAME + " TEXT NOT NULL, "
-                + PhotoContract.PhotoEntry.COLUMN_URL +  " TEXT UNIQUE NOT NULL);";
+                + PhotoContract.PhotoEntry._ID +           " INTEGER PRIMARY KEY AUTOINCREMENT  , "
+                + PhotoContract.PhotoEntry.COLUMN_NAME +   " TEXT NOT NULL, "
+                + PhotoContract.PhotoEntry.COLUMN_URL +    " TEXT NOT NULL, "
+                + PhotoContract.PhotoEntry.COLUMN_SECRET + " TEXT UNIQUE NOT NULL);";
 
         sqLiteDatabase.execSQL(SQL_CREATE_GUESTS_TABLE);
     }
@@ -56,6 +57,7 @@ public class OpenDBHelper extends SQLiteOpenHelper {
         String name = myData.getCaption();
         //TODO url надо переделывать _m, _s?
         String url = myData.getUrl();
+        String secret = myData.getSecret();
 
         OpenDBHelper instance = OpenDBHelper.getInstance();
 
@@ -63,6 +65,7 @@ public class OpenDBHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(PhotoContract.PhotoEntry.COLUMN_NAME, name);
         values.put(PhotoContract.PhotoEntry.COLUMN_URL, url);
+        values.put(PhotoContract.PhotoEntry.COLUMN_SECRET, secret);
 
         long newRowId = db.insert(PhotoContract.PhotoEntry.TABLE_NAME, null, values);
 
@@ -82,7 +85,9 @@ public class OpenDBHelper extends SQLiteOpenHelper {
         String[] projection = {
                 PhotoContract.PhotoEntry._ID,
                 PhotoContract.PhotoEntry.COLUMN_NAME,
-                PhotoContract.PhotoEntry.COLUMN_URL};
+                PhotoContract.PhotoEntry.COLUMN_URL,
+                PhotoContract.PhotoEntry.COLUMN_SECRET
+    };
 
         //делаем запрос
         try (Cursor cursor = db.query(
@@ -99,16 +104,16 @@ public class OpenDBHelper extends SQLiteOpenHelper {
                 myData.setId(cursor.getInt(cursor.getColumnIndex(PhotoContract.PhotoEntry._ID)));
                 myData.setCaption(cursor.getString(cursor.getColumnIndex(PhotoContract.PhotoEntry.COLUMN_NAME)));
                 myData.setUrl(cursor.getString(cursor.getColumnIndex(PhotoContract.PhotoEntry.COLUMN_URL)));
+                myData.setSecret(cursor.getString(cursor.getColumnIndex(PhotoContract.PhotoEntry.COLUMN_SECRET)));
                 allFavItems.add(myData);
             }
         }
-
         return allFavItems;
     }
 
-    public int deleteFavoritePhotoById(int id) {
+    public int deleteFavoritePhotoBySecret(String secret) {
         SQLiteDatabase db = OpenDBHelper.getInstance().getReadableDatabase();
-        int delete = db.delete(PhotoContract.PhotoEntry.TABLE_NAME, PhotoContract.PhotoEntry._ID + "=" + id, null);
+        int delete = db.delete(PhotoContract.PhotoEntry.TABLE_NAME, PhotoContract.PhotoEntry.COLUMN_SECRET + " = " + "'" + secret +"'", null);
         if (delete == -1){
             System.out.println("Error deleting");
         } else {

@@ -20,8 +20,6 @@ import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import static java.security.AccessController.getContext;
-
 public class FavoriteListAdapter extends RecyclerView.Adapter<FavoriteListAdapter.ViewHolder> {
 
     private List<MyData> favoriteItems;
@@ -73,7 +71,7 @@ public class FavoriteListAdapter extends RecyclerView.Adapter<FavoriteListAdapte
                 public void onClick(View view) {
                     OpenDBHelper instance = OpenDBHelper.getInstance();
                     MyData myData = favoriteItems.get(getAdapterPosition());
-                    int i = instance.deleteFavoritePhotoById(myData.getId());
+                    int i = instance.deleteFavoritePhotoBySecret(myData.getSecret());
                     if (i != -1){
                         favoriteItems.remove(myData);
                         notifyItemRemoved(getAdapterPosition());
