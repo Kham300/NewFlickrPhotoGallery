@@ -21,6 +21,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -99,15 +100,15 @@ public class FlickrFetchr {
             Log.e(TAG, "Failed to parse JSON", je);
         }
 
-        Set<MyData> fooSet = new LinkedHashSet<>( OpenDBHelper.getInstance().getAllFavItems());
-        for (MyData data : fooSet){
-            data.setFavorite(true);
+        Set<String> secretsSet = new HashSet<>( OpenDBHelper.getInstance().getSecretsFromAllFavItems());
+        for (MyData data : items){
+            if (secretsSet.contains(data.getSecret())){
+                data.setFavorite(true);
+            }
         }
+//        fooSet.addAll(items);
 
-        fooSet.addAll(items);
-
-        return new ArrayList<>(fooSet);
-
+        return items;
     }
 
     //method that pulls out information for each photo

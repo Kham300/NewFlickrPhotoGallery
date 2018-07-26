@@ -15,18 +15,8 @@ public class MyData {
     private String FORMAT = ".jpg";
     private String TMP = "http://farm";
     private Drawable drawable;
-    boolean isFavorite;
+    private boolean isFavorite;
 
-
-    public MyData() {
-    }
-
-    public MyData(int id, String secret, String server, String farm) {
-        this.id = id;
-        this.secret = secret;
-        this.serverId = server;
-        this.farmId = farm;
-    }
 
 
     public String getCaption() {
@@ -81,8 +71,9 @@ public class MyData {
         return isFavorite;
     }
 
-
     public String getSecret() {
         return secret;
     }
+
+
 }

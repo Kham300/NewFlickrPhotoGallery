@@ -1,20 +1,19 @@
 package com.example.h_mamytov.newflickrphotogallery.Fragments;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.h_mamytov.newflickrphotogallery.Adapters.CustomAdapter;
-import com.example.h_mamytov.newflickrphotogallery.Utils.FlickrFetchr;
+import com.example.h_mamytov.newflickrphotogallery.HomePresenter;
 import com.example.h_mamytov.newflickrphotogallery.entity.MyData;
 import com.example.h_mamytov.newflickrphotogallery.R;
 
@@ -25,15 +24,11 @@ public class FragmentHome extends Fragment {
     private CustomAdapter adapter;
     private Handler handler;
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
-
-
 
         StaggeredGridLayoutManager staggeredGridLayoutManager =
                 new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
@@ -43,28 +38,24 @@ public class FragmentHome extends Fragment {
         recyclerView.setAdapter(adapter);
 
         handler = new Handler();
-
-        initData();
-
+        HomePresenter homePresenter = new HomePresenter();
+        homePresenter.attachView(this);
+        homePresenter.viewIsReady();
         return view;
     }
 
-    public void initData(){
-        Thread thread = new Thread(new Runnable() {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public void initData(final List<MyData> myData) {
+        handler.post(new Runnable() {
             @Override
             public void run() {
-                List<MyData> myData = FlickrFetchr.downloadGalleryItems();
                 adapter.setMyDataList(myData);
-
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        adapter.notifyDataSetChanged();
-                    }
-                });
+                adapter.notifyDataSetChanged();
             }
         });
-        thread.start();
     }
+
+    public void showToast(String msg) {
+        Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+    }
+
 }

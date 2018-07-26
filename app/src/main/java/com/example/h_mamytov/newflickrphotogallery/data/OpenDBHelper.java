@@ -41,10 +41,11 @@ public class OpenDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         String SQL_CREATE_GUESTS_TABLE = "CREATE TABLE " + PhotoContract.PhotoEntry.TABLE_NAME + " ("
-                + PhotoContract.PhotoEntry._ID +           " INTEGER PRIMARY KEY AUTOINCREMENT  , "
-                + PhotoContract.PhotoEntry.COLUMN_NAME +   " TEXT NOT NULL, "
-                + PhotoContract.PhotoEntry.COLUMN_URL +    " TEXT NOT NULL, "
-                + PhotoContract.PhotoEntry.COLUMN_SECRET + " TEXT UNIQUE NOT NULL);";
+                + PhotoContract.PhotoEntry._ID +                   " INTEGER PRIMARY KEY AUTOINCREMENT  , "
+                + PhotoContract.PhotoEntry.COLUMN_NAME +           " TEXT NOT NULL, "
+                + PhotoContract.PhotoEntry.COLUMN_URL +            " TEXT NOT NULL, "
+                + PhotoContract.PhotoEntry.COLUMN_IS_FAVORITE +    " INTEGER NOT NULL DEFAULT 0, "
+                + PhotoContract.PhotoEntry.COLUMN_SECRET +         " TEXT UNIQUE NOT NULL);";
 
         sqLiteDatabase.execSQL(SQL_CREATE_GUESTS_TABLE);
     }
@@ -55,9 +56,9 @@ public class OpenDBHelper extends SQLiteOpenHelper {
 
     public void insertFavoritePhotos(MyData myData){
         String name = myData.getCaption();
-        //TODO url надо переделывать _m, _s?
         String url = myData.getUrl();
         String secret = myData.getSecret();
+        int isFavorite = myData.isFavorite() ? 1 : 0;
 
         OpenDBHelper instance = OpenDBHelper.getInstance();
 
@@ -65,6 +66,7 @@ public class OpenDBHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(PhotoContract.PhotoEntry.COLUMN_NAME, name);
         values.put(PhotoContract.PhotoEntry.COLUMN_URL, url);
+        values.put(PhotoContract.PhotoEntry.COLUMN_IS_FAVORITE, isFavorite);
         values.put(PhotoContract.PhotoEntry.COLUMN_SECRET, secret);
 
         long newRowId = db.insert(PhotoContract.PhotoEntry.TABLE_NAME, null, values);
@@ -86,6 +88,7 @@ public class OpenDBHelper extends SQLiteOpenHelper {
                 PhotoContract.PhotoEntry._ID,
                 PhotoContract.PhotoEntry.COLUMN_NAME,
                 PhotoContract.PhotoEntry.COLUMN_URL,
+                PhotoContract.PhotoEntry.COLUMN_IS_FAVORITE,
                 PhotoContract.PhotoEntry.COLUMN_SECRET
     };
 
@@ -104,11 +107,36 @@ public class OpenDBHelper extends SQLiteOpenHelper {
                 myData.setId(cursor.getInt(cursor.getColumnIndex(PhotoContract.PhotoEntry._ID)));
                 myData.setCaption(cursor.getString(cursor.getColumnIndex(PhotoContract.PhotoEntry.COLUMN_NAME)));
                 myData.setUrl(cursor.getString(cursor.getColumnIndex(PhotoContract.PhotoEntry.COLUMN_URL)));
+                myData.setFavorite(cursor.getInt(cursor.getColumnIndex(PhotoContract.PhotoEntry.COLUMN_IS_FAVORITE)) == 0);
                 myData.setSecret(cursor.getString(cursor.getColumnIndex(PhotoContract.PhotoEntry.COLUMN_SECRET)));
                 allFavItems.add(myData);
             }
         }
         return allFavItems;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    public List<String> getSecretsFromAllFavItems() {
+        List<String> secrets = new ArrayList<>();
+        SQLiteDatabase db = OpenDBHelper.getInstance().getReadableDatabase();
+
+        String[] projections = {
+                PhotoContract.PhotoEntry.COLUMN_SECRET
+        };
+
+        try (Cursor cursor = db.query(
+                    PhotoContract.PhotoEntry.TABLE_NAME,
+                    projections,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null)){
+            while (cursor.moveToNext()){
+                secrets.add(cursor.getString(cursor.getColumnIndex(PhotoContract.PhotoEntry.COLUMN_SECRET)));
+            }
+        }
+        return secrets;
     }
 
     public int deleteFavoritePhotoBySecret(String secret) {
@@ -121,4 +149,6 @@ public class OpenDBHelper extends SQLiteOpenHelper {
         }
         return delete;
     }
+
+
 }

@@ -14,6 +14,7 @@ public final class PhotoContract {
         public static final String COLUMN_NAME = "name";
         public static final String COLUMN_URL = "url";
         public static final String COLUMN_SECRET = "secret";
+        public static final String COLUMN_IS_FAVORITE = "favorite";
     }
 
 }

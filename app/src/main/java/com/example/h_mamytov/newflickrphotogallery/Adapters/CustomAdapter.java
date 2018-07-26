@@ -41,8 +41,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
         final MyData data = myDataList.get(i);
+
         if (data.isFavorite()){
            viewHolder.button.setImageResource(R.drawable.ic_star_black_24dp);
+        } else {
+            viewHolder.button.setImageResource(R.drawable.ic_star_border_black_24dp);
         }
         viewHolder.imageView.setImageBitmap(null);
         viewHolder.imageView.setTag(data.getUrl());
