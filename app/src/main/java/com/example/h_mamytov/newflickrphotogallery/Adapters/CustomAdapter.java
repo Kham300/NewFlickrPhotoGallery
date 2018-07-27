@@ -9,26 +9,22 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.h_mamytov.newflickrphotogallery.Utils.BlockingLifoQueue;
-import com.example.h_mamytov.newflickrphotogallery.Utils.DownloadManager;
-import com.example.h_mamytov.newflickrphotogallery.entity.MyData;
 import com.example.h_mamytov.newflickrphotogallery.R;
-import com.example.h_mamytov.newflickrphotogallery.data.OpenDBHelper;
+import com.example.h_mamytov.newflickrphotogallery.Utils.Picaso.Picaso;
+import com.example.h_mamytov.newflickrphotogallery.entity.MyData;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 
 public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> {
 
     private List<MyData> myDataList;
-    private ThreadPoolExecutor threadPoolExecutor ;
+    private Callback callback;
 
     public CustomAdapter() {
         this.myDataList = new ArrayList<>();
-        threadPoolExecutor = new ThreadPoolExecutor(5, 5, 1, TimeUnit.MINUTES, new BlockingLifoQueue<Runnable>());
+
     }
 
     @NonNull
@@ -49,9 +45,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         }
         viewHolder.imageView.setImageBitmap(null);
         viewHolder.imageView.setTag(data.getUrl());
-        threadPoolExecutor.execute(new DownloadManager(viewHolder.imageView, data.getUrl(), i));
+        ImageView imageView = viewHolder.imageView;
+        String url = data.getUrl();
+        Picaso.getInstance().download(imageView, url);
     }
-
 
     @Override
     public int getItemCount() {
@@ -77,20 +74,25 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                     MyData myData = CustomAdapter.this.myDataList.get(getAdapterPosition());
                     if (!myData.isFavorite()){
                         button.setImageResource(R.drawable.ic_star_black_24dp);
-                        OpenDBHelper instance = OpenDBHelper.getInstance();
-                        instance.insertFavoritePhotos(myData);
+                        callback.insertFavoritePhotos(myData);
                         myData.setFavorite(true);
                     } else {
                         button.setImageResource(R.drawable.ic_star_border_black_24dp);
-                        OpenDBHelper instance = OpenDBHelper.getInstance();
-                        instance.deleteFavoritePhotoBySecret(myData.getSecret());
+                        callback.deleteFavoritePhotoBySecret(myData);
                         myDataList.remove(myData);
                     }
                 }
             });
-
         }
+    }
 
+    public interface Callback{
+        void insertFavoritePhotos(MyData myData);
+        void deleteFavoritePhotoBySecret(MyData myData);
+    }
+
+    public void setCallback(Callback callback) {
+        this.callback = callback;
     }
 
     public void setMyDataList(List<MyData> myDataList) {

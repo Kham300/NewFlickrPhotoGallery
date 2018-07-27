@@ -12,17 +12,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.example.h_mamytov.newflickrphotogallery.Adapters.CustomAdapter;
+import com.example.h_mamytov.newflickrphotogallery.HomePhotoView;
 import com.example.h_mamytov.newflickrphotogallery.HomePresenter;
 import com.example.h_mamytov.newflickrphotogallery.entity.MyData;
 import com.example.h_mamytov.newflickrphotogallery.R;
 
 import java.util.List;
 
-public class FragmentHome extends Fragment {
+public class FragmentHome extends Fragment  implements CustomAdapter.Callback, HomePhotoView{
 
     private CustomAdapter adapter;
     private Handler handler;
+    @InjectPresenter
+    private HomePresenter homePresenter;
+
 
     @Nullable
     @Override
@@ -36,26 +41,32 @@ public class FragmentHome extends Fragment {
 
         adapter = new CustomAdapter();
         recyclerView.setAdapter(adapter);
+        adapter.setCallback(this);
 
         handler = new Handler();
-        HomePresenter homePresenter = new HomePresenter();
+        homePresenter = new HomePresenter();
         homePresenter.attachView(this);
         homePresenter.viewIsReady();
         return view;
     }
 
-    public void initData(final List<MyData> myData) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                adapter.setMyDataList(myData);
-                adapter.notifyDataSetChanged();
-            }
-        });
+    @Override
+    public void show(final List<MyData> myData) {
+        adapter.setMyDataList(myData);
+        adapter.notifyDataSetChanged();
     }
 
     public void showToast(String msg) {
         Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void insertFavoritePhotos(MyData myData) {
+        homePresenter.insertFavoritePhotos(myData);
+    }
+
+    @Override
+    public void deleteFavoritePhotoBySecret(MyData myData) {
+        homePresenter.deleteFavoritePhoto(myData);
+    }
 }

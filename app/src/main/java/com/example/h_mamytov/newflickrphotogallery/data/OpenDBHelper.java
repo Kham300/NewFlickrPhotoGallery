@@ -40,7 +40,8 @@ public class OpenDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String SQL_CREATE_GUESTS_TABLE = "CREATE TABLE " + PhotoContract.PhotoEntry.TABLE_NAME + " ("
+        String SQL_CREATE_GUESTS_TABLE =                           "CREATE TABLE "
+                + PhotoContract.PhotoEntry.TABLE_NAME +            " ("
                 + PhotoContract.PhotoEntry._ID +                   " INTEGER PRIMARY KEY AUTOINCREMENT  , "
                 + PhotoContract.PhotoEntry.COLUMN_NAME +           " TEXT NOT NULL, "
                 + PhotoContract.PhotoEntry.COLUMN_URL +            " TEXT NOT NULL, "
@@ -79,7 +80,6 @@ public class OpenDBHelper extends SQLiteOpenHelper {
 
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     public List<MyData> getAllFavItems() {
         List<MyData> allFavItems = new ArrayList<>();
         SQLiteDatabase db = OpenDBHelper.getInstance().getReadableDatabase();

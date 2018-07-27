@@ -1,7 +1,5 @@
 package com.example.h_mamytov.newflickrphotogallery.Utils;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
@@ -20,9 +18,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -37,7 +33,6 @@ import java.util.Set;
  */
 
 public class FlickrFetchr {
-
     //
     private static final String TAG = "FlickrFetchr";
     private static final String API_KEY = "23275965a3f41093fe4cf9129b32d1d0";
@@ -53,7 +48,7 @@ public class FlickrFetchr {
             .appendQueryParameter("extras", "url_s")
             .build();
 
-    public static byte[] getUrlBytes(String urlSpec) throws IOException{
+    public static byte[]  getUrlBytes(String urlSpec) throws IOException{
         URL url = new URL(urlSpec);
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
         try{
@@ -75,14 +70,13 @@ public class FlickrFetchr {
         }
     }
 
-    private static String getUrlString() throws IOException {
+    private String getUrlString() throws IOException {
         return new String(getUrlBytes(ENDPOINT.toString()));
     }
 
-
     //method that builds an appropriate request URL and fetches its contents.
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    public static List<MyData> downloadGalleryItems() {
+    public  List<MyData> downloadGalleryItems() {
         List<MyData> items = new ArrayList<>();
 
         try{
@@ -106,13 +100,11 @@ public class FlickrFetchr {
                 data.setFavorite(true);
             }
         }
-//        fooSet.addAll(items);
-
         return items;
     }
 
     //method that pulls out information for each photo
-    private static void parseItems(List<MyData> items, JSONObject jsonBody) throws JSONException{
+    private void parseItems(List<MyData> items, JSONObject jsonBody) throws JSONException{
 
         //This array contains a collection of JSONObjects, each representing metadata for a single photo
         JSONObject photosJsonObject = jsonBody.getJSONObject("photos");
@@ -135,7 +127,6 @@ public class FlickrFetchr {
             items.add(item);
         }
     }
-
 
     //=========================================================//
     private String buildUrl(String method, String query){

@@ -10,24 +10,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.h_mamytov.newflickrphotogallery.R;
-import com.example.h_mamytov.newflickrphotogallery.Utils.BlockingLifoQueue;
-import com.example.h_mamytov.newflickrphotogallery.Utils.DownloadManager;
-import com.example.h_mamytov.newflickrphotogallery.data.OpenDBHelper;
+import com.example.h_mamytov.newflickrphotogallery.Utils.Picaso.Picaso;
 import com.example.h_mamytov.newflickrphotogallery.entity.MyData;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 public class FavoriteListAdapter extends RecyclerView.Adapter<FavoriteListAdapter.ViewHolder> {
+    private DeleteFavItem deleteFavItem;
 
     private List<MyData> favoriteItems;
-    private ThreadPoolExecutor threadPoolExecutor ;
 
     public FavoriteListAdapter() {
         favoriteItems = new ArrayList<>();
-        threadPoolExecutor = new ThreadPoolExecutor(3,3,1, TimeUnit.MINUTES, new BlockingLifoQueue<Runnable>());
     }
 
     @NonNull
@@ -40,10 +35,11 @@ public class FavoriteListAdapter extends RecyclerView.Adapter<FavoriteListAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         final MyData myData = favoriteItems.get(i);
+        String url = myData.getUrl();
+        ImageView imageView = viewHolder.imageView;
         viewHolder.imageView.setImageBitmap(null);
-        viewHolder.imageView.setTag(myData.getUrl());
-        threadPoolExecutor.execute(new DownloadManager(viewHolder.imageView, myData.getUrl(), i));
-
+        viewHolder.imageView.setTag(url);
+        Picaso.getInstance().download(imageView, url);
     }
 
     @Override
@@ -69,9 +65,8 @@ public class FavoriteListAdapter extends RecyclerView.Adapter<FavoriteListAdapte
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    OpenDBHelper instance = OpenDBHelper.getInstance();
                     MyData myData = favoriteItems.get(getAdapterPosition());
-                    int i = instance.deleteFavoritePhotoBySecret(myData.getSecret());
+                    int i = deleteFavItem.deleteFavoriteItem(myData.getSecret());
                     if (i != -1){
                         favoriteItems.remove(myData);
                         notifyItemRemoved(getAdapterPosition());
@@ -79,5 +74,13 @@ public class FavoriteListAdapter extends RecyclerView.Adapter<FavoriteListAdapte
                 }
             });
         }
+    }
+
+    public interface DeleteFavItem{
+        int deleteFavoriteItem(String secret);
+    }
+
+    public void setDeleteFavItem(DeleteFavItem deleteFavItem) {
+        this.deleteFavItem = deleteFavItem;
     }
 }

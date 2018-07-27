@@ -19,10 +19,12 @@ import com.example.h_mamytov.newflickrphotogallery.entity.MyData;
 
 import java.util.List;
 
-public class FragmentFavorites extends Fragment {
+public class FragmentFavorites extends Fragment implements FavoriteListAdapter.DeleteFavItem{
 
     private FavoriteListAdapter adapter;
     private Handler handler;
+    private FavoritesPresenter favoritesPresenter;
+
 
     @Nullable
     @Override
@@ -35,10 +37,11 @@ public class FragmentFavorites extends Fragment {
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
 
         adapter = new FavoriteListAdapter();
+        handler = new Handler();
 
         recyclerView.setAdapter(adapter);
-        handler = new Handler();
-        FavoritesPresenter favoritesPresenter = new FavoritesPresenter();
+        adapter.setDeleteFavItem(this);
+        favoritesPresenter = new FavoritesPresenter();
         favoritesPresenter.attachView(this);
         favoritesPresenter.viewIsReady();
 
@@ -46,17 +49,17 @@ public class FragmentFavorites extends Fragment {
     }
 
     public void initData(final List<MyData> myData) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                adapter.setFavoriteItems(myData);
-                adapter.notifyDataSetChanged();
-            }
-        });
+        adapter.setFavoriteItems(myData);
+        adapter.notifyDataSetChanged();
     }
 
     public void showToast(String msg) {
         Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public int deleteFavoriteItem(String secret) {
+        return favoritesPresenter.deleteFavItem(secret);
     }
 }
 

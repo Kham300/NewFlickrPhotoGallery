@@ -1,4 +1,4 @@
-package com.example.h_mamytov.newflickrphotogallery.Utils;
+package com.example.h_mamytov.newflickrphotogallery.Utils.Picaso;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.ImageView;
+
+import com.example.h_mamytov.newflickrphotogallery.Utils.FlickrFetchr;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,16 +22,15 @@ public class DownloadManager extends Thread {
     private ImageView imageView;
     private String url;
     private Handler handler;
-    private int position;
+
     private Context context;
     private Bitmap bitmap;
     private File file;
 
-    public DownloadManager(ImageView imageView, String url, int position) {
+    public DownloadManager(ImageView imageView, String url) {
         this.imageView = imageView;
         this.url = url;
         handler = new Handler();
-        this.position = position;
         context = imageView.getContext();
         file = new File(context.getCacheDir(), createFileName(url) );
     }
@@ -45,7 +46,7 @@ public class DownloadManager extends Thread {
         } else {
             String url_q = url.substring(0, url.length() - 5);
             url_q = url_q + "z.jpg";
-            bitmap = DownloadManager.getBitmapFromURL(url_q);
+            bitmap = getBitmapFromURL(url_q);
             kokok();
             if (bitmap != null) {
                 savePicture(bitmap);
@@ -62,14 +63,13 @@ public class DownloadManager extends Thread {
                 } else {
                     System.out.println("didn't match");
                 }
-                Log.i(TAG, "setting image to the position " + position);
             }
         });
     }
 
 
     //to download an image
-    private static Bitmap getBitmapFromURL(String url) {
+    private  Bitmap getBitmapFromURL(String url) {
         try {
             byte[] bitmapBytes = FlickrFetchr.getUrlBytes(url);
             return BitmapFactory.decodeByteArray(bitmapBytes,0, bitmapBytes.length);
