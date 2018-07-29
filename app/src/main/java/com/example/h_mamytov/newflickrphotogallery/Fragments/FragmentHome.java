@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -12,22 +11,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
 import com.example.h_mamytov.newflickrphotogallery.Adapters.CustomAdapter;
 import com.example.h_mamytov.newflickrphotogallery.HomePhotoView;
 import com.example.h_mamytov.newflickrphotogallery.HomePresenter;
-import com.example.h_mamytov.newflickrphotogallery.entity.MyData;
 import com.example.h_mamytov.newflickrphotogallery.R;
+import com.example.h_mamytov.newflickrphotogallery.entity.MyData;
 
 import java.util.List;
 
-public class FragmentHome extends Fragment  implements CustomAdapter.Callback, HomePhotoView{
+public class FragmentHome extends MvpAppCompatFragment implements CustomAdapter.Callback, HomePhotoView{
+
+    @InjectPresenter
+    public HomePresenter homePresenter;
 
     private CustomAdapter adapter;
     private Handler handler;
-    @InjectPresenter
-    private HomePresenter homePresenter;
-
 
     @Nullable
     @Override
@@ -44,9 +44,7 @@ public class FragmentHome extends Fragment  implements CustomAdapter.Callback, H
         adapter.setCallback(this);
 
         handler = new Handler();
-        homePresenter = new HomePresenter();
-        homePresenter.attachView(this);
-        homePresenter.viewIsReady();
+        homePresenter.getData();
         return view;
     }
 
