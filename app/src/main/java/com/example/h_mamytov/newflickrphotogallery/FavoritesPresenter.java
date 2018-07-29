@@ -2,16 +2,16 @@ package com.example.h_mamytov.newflickrphotogallery;
 
 import android.os.Handler;
 
-import com.example.h_mamytov.newflickrphotogallery.Fragments.FragmentFavorites;
+import com.arellomobile.mvp.InjectViewState;
+import com.arellomobile.mvp.MvpPresenter;
 import com.example.h_mamytov.newflickrphotogallery.PhotoModel.PhotoModel;
 import com.example.h_mamytov.newflickrphotogallery.entity.MyData;
 
-import java.lang.ref.WeakReference;
 import java.util.List;
 
-public class FavoritesPresenter {
+@InjectViewState
+public class FavoritesPresenter extends MvpPresenter<FavoritePhotoView> {
 
-    private WeakReference<FragmentFavorites> view;
     private PhotoModel photoModel;
     private Handler handler;
 
@@ -20,11 +20,7 @@ public class FavoritesPresenter {
         handler = new Handler();
     }
 
-    public void attachView(FragmentFavorites fragmentFavorites){
-        view = new WeakReference<>(fragmentFavorites);
-    }
-
-    public void viewIsReady() {
+    public void getData() {
         loadUsers();
     }
 
@@ -36,12 +32,7 @@ public class FavoritesPresenter {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (view != null && myData != null) {
-                            final FragmentFavorites fragmentFavorites = view.get();
-                            if (fragmentFavorites != null) {
-                                fragmentFavorites.initData(myData);
-                            }
-                        }
+                        getViewState().show(myData);
                     }
                 });
             }
