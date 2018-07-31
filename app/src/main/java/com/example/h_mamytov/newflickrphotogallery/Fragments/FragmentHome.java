@@ -44,7 +44,7 @@ public class FragmentHome extends MvpAppCompatFragment implements CustomAdapter.
         adapter.setCallback(this);
 
         handler = new Handler();
-        homePresenter.getData();
+
         return view;
     }
 

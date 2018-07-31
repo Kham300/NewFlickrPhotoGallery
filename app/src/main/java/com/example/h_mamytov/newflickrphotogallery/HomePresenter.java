@@ -18,6 +18,7 @@ public class HomePresenter extends MvpPresenter<HomePhotoView> {
     public HomePresenter() {
         photoModel = new PhotoModel();
         handler = new Handler();
+        getData();
     }
 
     public void getData() {
@@ -29,16 +30,17 @@ public class HomePresenter extends MvpPresenter<HomePhotoView> {
             @Override
             public void run() {
                 final List<MyData> myData = photoModel.downloadGalleryItems();
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        getViewState().show(myData);
-                    }
-                });
+                if (!myData.isEmpty()) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            getViewState().show(myData);
+                        }
+                    });
+                }
             }
         });
         thread.start();
-
     }
 
     public void insertFavoritePhotos(MyData myData) {
