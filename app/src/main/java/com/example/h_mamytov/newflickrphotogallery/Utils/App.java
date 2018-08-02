@@ -2,14 +2,19 @@ package com.example.h_mamytov.newflickrphotogallery.Utils;
 
 import android.app.Application;
 
+import com.example.h_mamytov.newflickrphotogallery.AppComponent;
+import com.example.h_mamytov.newflickrphotogallery.DaggerAppComponent;
 import com.example.h_mamytov.newflickrphotogallery.data.OpenDBHelper;
 import com.facebook.stetho.Stetho;
 
 public class App extends Application {
 
+    private static AppComponent modelComponent2;
+
     @Override
     public void onCreate() {
         super.onCreate();
+
         // Create an InitializerBuilder
         Stetho.InitializerBuilder initializerBuilder =
                 Stetho.newInitializerBuilder(this);
@@ -32,5 +37,13 @@ public class App extends Application {
 
         OpenDBHelper.init(this);
 
+        //Dagger
+        modelComponent2 = DaggerAppComponent.builder()
+                .build();
+
+    }
+
+    public static AppComponent getComponent() {
+        return modelComponent2;
     }
 }

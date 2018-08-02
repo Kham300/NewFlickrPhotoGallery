@@ -8,12 +8,19 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.h_mamytov.newflickrphotogallery.Fragments.FragmentFavorites;
 import com.example.h_mamytov.newflickrphotogallery.Fragments.FragmentHome;
+import com.example.h_mamytov.newflickrphotogallery.Utils.App;
+
+import javax.inject.Inject;
 
 
 public class MainActivity extends AppCompatActivity {
+
+    @Inject
+    MainActivityPresenter presenter;
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -21,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
         //UI
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        App.getComponent().injectsMainActivity(this);
+
+        showToast(presenter.getData());
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(
@@ -49,6 +59,11 @@ public class MainActivity extends AppCompatActivity {
             transaction.replace(R.id.container, new  FragmentHome());
             transaction.commit();
         }
+
+    }
+
+    private void showToast(String msg) {
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
 
     }
 

@@ -12,11 +12,16 @@ import com.example.h_mamytov.newflickrphotogallery.entity.MyData;
 import java.util.ArrayList;
 import java.util.List;
 
+import dagger.Module;
+import dagger.Provides;
+
+@Module
 public class OpenDBHelper extends SQLiteOpenHelper {
 
     public static final String LOG_TAG = OpenDBHelper.class.getSimpleName();
     private static OpenDBHelper sInstance;
 
+    @Provides
     public static synchronized OpenDBHelper getInstance(){
         if (sInstance == null){
     throw  new RuntimeException("OpenDBHelper не был заиничин");

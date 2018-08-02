@@ -32,7 +32,17 @@ import java.util.Set;
  * getUrlBytes(String) to a String.
  */
 
+
 public class FlickrFetchr {
+
+//    @Provides
+//    FlickrFetchr provideFlickrFetchr(){
+//        return new FlickrFetchr();
+//    }
+
+    public String showFlickr(){
+        return " hi im Flickr1";
+    }
     //
     private static final String TAG = "FlickrFetchr";
     private static final String API_KEY = "23275965a3f41093fe4cf9129b32d1d0";

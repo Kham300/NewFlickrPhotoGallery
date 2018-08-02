@@ -4,19 +4,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <com.example.h_mamytov.newflickrphotogallery.customView.MyWidgetView
+    <com.example.h_mamytov.newflickrphotogallery.customView.CirclesSlideIndicator
         android:id="@+id/mywidget1"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_margin="5dp" />
 
-    <com.example.h_mamytov.newflickrphotogallery.customView.MyWidgetView
+    <com.example.h_mamytov.newflickrphotogallery.customView.CirclesSlideIndicator
         android:id="@+id/mywidget2"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_margin="5dp" />
 
-    <com.example.h_mamytov.newflickrphotogallery.customView.MyWidgetView
+    <com.example.h_mamytov.newflickrphotogallery.customView.CirclesSlideIndicator
         android:id="@+id/mywidget3"
         android:layout_width="54dp"
         android:layout_height="44dp"

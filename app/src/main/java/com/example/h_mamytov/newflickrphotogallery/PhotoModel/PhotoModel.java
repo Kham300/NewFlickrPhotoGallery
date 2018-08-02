@@ -9,9 +9,19 @@ import com.example.h_mamytov.newflickrphotogallery.entity.MyData;
 
 import java.util.List;
 
+import dagger.Module;
+import dagger.Provides;
+
+@Module
 public class PhotoModel {
+
     private FlickrFetchr flickrFetchr;
     private OpenDBHelper openDBHelper;
+
+    @Provides
+    PhotoModel providePhotomodel(){
+        return new PhotoModel();
+    }
 
     public PhotoModel() {
         flickrFetchr = new FlickrFetchr();
@@ -38,5 +48,7 @@ public class PhotoModel {
 
     public int deletePhoto(String secret) {
         return openDBHelper.deleteFavoritePhotoBySecret(secret);
+
+
     }
 }
