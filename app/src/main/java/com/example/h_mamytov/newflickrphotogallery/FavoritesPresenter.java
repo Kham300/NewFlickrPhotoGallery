@@ -16,7 +16,7 @@ public class FavoritesPresenter extends MvpPresenter<FavoritePhotoView> {
     private Handler handler;
 
     public FavoritesPresenter() {
-        photoModel = new PhotoModel();
+//        photoModel = new PhotoModel();
         handler = new Handler();
     }
 

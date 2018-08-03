@@ -13,27 +13,47 @@ import android.widget.Toast;
 
 import com.arellomobile.mvp.MvpAppCompatFragment;
 import com.arellomobile.mvp.presenter.InjectPresenter;
+import com.arellomobile.mvp.presenter.ProvidePresenter;
 import com.example.h_mamytov.newflickrphotogallery.Adapters.CustomAdapter;
 import com.example.h_mamytov.newflickrphotogallery.HomePhotoView;
 import com.example.h_mamytov.newflickrphotogallery.HomePresenter;
 import com.example.h_mamytov.newflickrphotogallery.R;
+import com.example.h_mamytov.newflickrphotogallery.Utils.App;
 import com.example.h_mamytov.newflickrphotogallery.entity.MyData;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class FragmentHome extends MvpAppCompatFragment implements CustomAdapter.Callback, HomePhotoView{
 
     @InjectPresenter
-    public HomePresenter homePresenter;
+    public HomePresenter moxyHomePresenter;
+
+    @Inject
+    public HomePresenter daggerHomePresenter;
+
+    @ProvidePresenter
+    HomePresenter providePresenter() {
+        return daggerHomePresenter;
+    }
 
     private CustomAdapter adapter;
+
     private Handler handler;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        App.getComponent().injectsHomeFragment(this);
+        super.onCreate(savedInstanceState);
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+
 
         StaggeredGridLayoutManager staggeredGridLayoutManager =
                 new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
@@ -60,11 +80,11 @@ public class FragmentHome extends MvpAppCompatFragment implements CustomAdapter.
 
     @Override
     public void insertFavoritePhotos(MyData myData) {
-        homePresenter.insertFavoritePhotos(myData);
+        moxyHomePresenter.insertFavoritePhotos(myData);
     }
 
     @Override
     public void deleteFavoritePhotoBySecret(MyData myData) {
-        homePresenter.deleteFavoritePhoto(myData);
+        moxyHomePresenter.deleteFavoritePhoto(myData);
     }
 }

@@ -15,8 +15,8 @@ public class HomePresenter extends MvpPresenter<HomePhotoView> {
     private PhotoModel photoModel;
     private Handler handler;
 
-    public HomePresenter() {
-        photoModel = new PhotoModel();
+    public HomePresenter(PhotoModel photoModel) {
+        this.photoModel = photoModel;
         handler = new Handler();
         getData();
     }
